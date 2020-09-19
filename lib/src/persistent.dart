@@ -46,7 +46,7 @@ persist(from) {
   if(from is PersistentCollection) return from;
   if(from is Map) {
     var map = new PMap();
-    return map.withTransient((TMap map) {
+    return map.withTransient((map) {
       from.forEach((key,value) => map.doAssoc(per(key), per(value)));
     });
   }

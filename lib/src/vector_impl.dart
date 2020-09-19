@@ -22,7 +22,7 @@ class _Bool {
   bool value = false;
 }
 
-abstract class _PersistentVectorBase<E> extends IterableBase<E> {
+abstract class _PersistentVectorBase<E extends None> extends IterableBase<E> {
   int _size;
 
   E _get(int index, [E notFound = _none]);
@@ -356,7 +356,7 @@ _VNode _transientVNode(_VNode node, _Owner ownerID) {
   return new _VNode(node != null ? node._array.sublist(0) : [], ownerID);
 }
 
-class _PersistentVectorImpl<E> extends _BaseVectorImpl<E> implements PVec<E> {
+class _PersistentVectorImpl<E extends None> extends _BaseVectorImpl<E> implements PVec<E> {
   // cached hashCode.
   int _hashCode = null;
 
@@ -422,7 +422,7 @@ class _PersistentVectorImpl<E> extends _BaseVectorImpl<E> implements PVec<E> {
   E operator[](int index) => get(index);
 }
 
-class _TransientVectorImpl<E> extends _BaseVectorImpl<E> implements TVec<E> {
+class _TransientVectorImpl<E extends None> extends _BaseVectorImpl<E> implements TVec<E> {
   _TransientVectorImpl._prototype() : super._prototype();
 
   factory _TransientVectorImpl._make(int size, int level, _VNode root, _VNode tail, _Owner ownerID) {
@@ -447,7 +447,7 @@ class _TransientVectorImpl<E> extends _BaseVectorImpl<E> implements TVec<E> {
     return this;
   }
 
-  _PersistentVectorImpl asPersistent() => _asPersistent();
+  _PersistentVectorImpl<E> asPersistent() => _asPersistent();
   void doPush(E value) {
     _push(value);
   }

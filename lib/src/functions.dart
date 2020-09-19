@@ -73,7 +73,7 @@ PersistentCollection conj(PersistentCollection coll, arg0,
 PersistentCollection into(PersistentCollection coll, Iterable iter) {
   return _dispatch(coll,
       op: 'into',
-      map: () => (coll as PMap).withTransient((TMap t) =>
+      map: () => (coll as PMap).withTransient((t) =>
           iter.forEach((arg) => t.doAssoc(_firstP(arg), _secondP(arg)))),
       vec: () => (coll as PVec)
           .withTransient((t) => iter.forEach((arg) => t.doPush(arg))),
@@ -204,7 +204,7 @@ PersistentCollection dissocI(PersistentCollection coll, Iterable iter) {
   return _dispatch(coll,
       op: 'dissocI',
       map: () => (coll as PMap).withTransient(
-          (TMap t) => iter.forEach((arg) => t.doDelete(arg, missingOk: true))),
+          (t) => iter.forEach((arg) => t.doDelete(arg, missingOk: true))),
       vec: () => _dissocFromVector(coll as PVec, iter),
       set: () => (coll as PSet).withTransient(
           (TSet t) => iter.forEach((arg) => t.doDelete(arg, missingOk: true))));

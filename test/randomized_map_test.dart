@@ -122,13 +122,13 @@ doTest(operationsCnt, print_fn){
       'persistentWithTransient': {
         'create': () => new PMap(),
         'bulkInsert': (PMap me, Map updateWith) =>
-            me.withTransient((TMap me) =>
+            me.withTransient((me) =>
               updateWith.keys.fold(me, (me, k) => me.doAssoc(k, updateWith[k]))),
         'bulkDelete': (PMap me, List keys) =>
-            me.withTransient((TMap me) =>
+            me.withTransient((me) =>
               keys.fold(me, (me, k) =>  me.doDelete(k, missingOk: true))),
         'bulkAdjust': (PMap me, List keys, adjust) =>
-            me.withTransient((TMap me) =>
+            me.withTransient((me) =>
               keys.fold(me, (me, k) => me.doUpdate(k, adjust))),
         'deepCopy': (PMap me) => me
       },
