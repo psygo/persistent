@@ -6,7 +6,7 @@
 
 part of persistent;
 
-_dispatch(x, {op:"operation", map, vec, set}) {
+_dispatch(x, {op: "operation", map, vec, set}) {
   if (x is PMap) {
     if (map != null) return map();
   } else if (x is PVec) {
@@ -17,8 +17,8 @@ _dispatch(x, {op:"operation", map, vec, set}) {
   throw new Exception("${x.runtimeType} does not support $op operation");
 }
 
-_firstP(p) => p is Pair? p.fst : p.first;
-_secondP(p) => (p is Pair)? p.snd : p.last;
+_firstP(p) => p is Pair ? p.fst : p.first;
+_secondP(p) => (p is Pair) ? p.snd : p.last;
 
 /**
  * Returns a new collection which is the result of inserting elements to persistent
@@ -37,8 +37,18 @@ _secondP(p) => (p is Pair)? p.snd : p.last;
  *      conj(pm, ['a', 8]); // == persist({'a': 8});
  *      conj(pm, new Pair(['a', 6]), ['b', 10]); // == persist({'a': 6, 'b': 10})
  */
-PersistentCollection conj(PersistentCollection coll, arg0, [arg1 = _none, arg2 = _none, arg3 = _none, arg4 = _none, arg5 = _none, arg6 = _none, arg7 = _none, arg8 = _none, arg9 = _none]) {
-  var varArgs = [arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9].where((x) => x != _none);
+PersistentCollection conj(PersistentCollection coll, arg0,
+    [arg1 = _none,
+    arg2 = _none,
+    arg3 = _none,
+    arg4 = _none,
+    arg5 = _none,
+    arg6 = _none,
+    arg7 = _none,
+    arg8 = _none,
+    arg9 = _none]) {
+  var varArgs = [arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9]
+      .where((x) => x != _none);
   return into(coll, varArgs);
 }
 
@@ -62,12 +72,15 @@ PersistentCollection conj(PersistentCollection coll, arg0, [arg1 = _none, arg2 =
  */
 PersistentCollection into(PersistentCollection coll, Iterable iter) {
   return _dispatch(coll,
-     op: 'into',
-     map:()=>  (coll as PMap).withTransient((TMap t) => iter.forEach((arg) => t.doAssoc(_firstP(arg), _secondP(arg)))),
-     vec:()=>  (coll as PVec).withTransient((t) => iter.forEach((arg) => t.doPush(arg))),
-     set:()=>  (coll as PSet).withTransient((t) => iter.forEach((arg) => t.doInsert(arg)))
-  );
+      op: 'into',
+      map: () => (coll as PMap).withTransient((TMap t) =>
+          iter.forEach((arg) => t.doAssoc(_firstP(arg), _secondP(arg)))),
+      vec: () => (coll as PVec)
+          .withTransient((t) => iter.forEach((arg) => t.doPush(arg))),
+      set: () => (coll as PSet)
+          .withTransient((t) => iter.forEach((arg) => t.doInsert(arg))));
 }
+
 /**
  * Returns a new collection which is the result of inserting new keys and values
  * into [PersistentIndexedCollection] [coll] ([PMap]/[PVec]).
@@ -80,30 +93,41 @@ PersistentCollection into(PersistentCollection coll, Iterable iter) {
  *      PersistentVector p = persist([1, 2, 3]);
  *      assoc(pm, 0, 'a', 2, 'b', 0, 'c'); // == persist(['c', 2, 'b'])
  */
-PersistentCollection assoc(PersistentIndexedCollection coll, key0, val0, [
-                                  key1 = _none, val1 = _none,
-                                  key2 = _none, val2 = _none,
-                                  key3 = _none, val3 = _none,
-                                  key4 = _none, val4 = _none,
-                                  key5 = _none, val5 = _none,
-                                  key6 = _none, val6 = _none,
-                                  key7 = _none, val7 = _none,
-                                  key8 = _none, val8 = _none,
-                                  key9 = _none, val9 = _none
-                                 ]) {
-  var argsAll = [[key0,val0],
-                 [key1,val1],
-                 [key2,val2],
-                 [key3,val3],
-                 [key4,val4],
-                 [key5,val5],
-                 [key6,val6],
-                 [key7,val7],
-                 [key8,val8],
-                 [key9,val9]];
-  argsAll.forEach((a) => (a[0] != _none && a[1] ==_none)?
-      throw new ArgumentError("Even number of keys and values is required") : null);
-  var varArgs = argsAll.where((x) => x[0]!= _none && x[1] != _none);
+PersistentCollection assoc(PersistentIndexedCollection coll, key0, val0,
+    [key1 = _none,
+    val1 = _none,
+    key2 = _none,
+    val2 = _none,
+    key3 = _none,
+    val3 = _none,
+    key4 = _none,
+    val4 = _none,
+    key5 = _none,
+    val5 = _none,
+    key6 = _none,
+    val6 = _none,
+    key7 = _none,
+    val7 = _none,
+    key8 = _none,
+    val8 = _none,
+    key9 = _none,
+    val9 = _none]) {
+  var argsAll = [
+    [key0, val0],
+    [key1, val1],
+    [key2, val2],
+    [key3, val3],
+    [key4, val4],
+    [key5, val5],
+    [key6, val6],
+    [key7, val7],
+    [key8, val8],
+    [key9, val9]
+  ];
+  argsAll.forEach((a) => (a[0] != _none && a[1] == _none)
+      ? throw new ArgumentError("Even number of keys and values is required")
+      : null);
+  var varArgs = argsAll.where((x) => x[0] != _none && x[1] != _none);
   return assocI(coll, varArgs);
 }
 
@@ -121,10 +145,10 @@ PersistentCollection assoc(PersistentIndexedCollection coll, key0, val0, [
  */
 PersistentCollection assocI(PersistentIndexedCollection coll, Iterable iter) {
   return _dispatch(coll,
-     op: 'assocI',
-     map:()=> into(coll, iter),
-     vec:()=> (coll as PVec).withTransient((t) => iter.forEach((arg) => t[_firstP(arg)] = _secondP(arg)))
-  );
+      op: 'assocI',
+      map: () => into(coll, iter),
+      vec: () => (coll as PVec).withTransient(
+          (t) => iter.forEach((arg) => t[_firstP(arg)] = _secondP(arg))));
 }
 
 /**
@@ -144,8 +168,18 @@ PersistentCollection assocI(PersistentIndexedCollection coll, Iterable iter) {
  *      dissoc(p, 'c', 'b'); // == persist(['a'])
  *      dissoc(p, 'a'); // == persist(['b', 'c'])
  */
-PersistentCollection dissoc(PersistentCollection coll, arg0, [arg1 = _none, arg2 = _none, arg3 = _none, arg4 = _none, arg5 = _none, arg6 = _none, arg7 = _none, arg8 = _none, arg9 = _none]) {
-  var varArgs = [arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9].where((x) => x != _none);
+PersistentCollection dissoc(PersistentCollection coll, arg0,
+    [arg1 = _none,
+    arg2 = _none,
+    arg3 = _none,
+    arg4 = _none,
+    arg5 = _none,
+    arg6 = _none,
+    arg7 = _none,
+    arg8 = _none,
+    arg9 = _none]) {
+  var varArgs = [arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9]
+      .where((x) => x != _none);
   return dissocI(coll, varArgs);
 }
 
@@ -166,25 +200,24 @@ PersistentCollection dissoc(PersistentCollection coll, arg0, [arg1 = _none, arg2
  *      dissocI(p, [0, 2]); // == persist(['b', 'd'])
  *
  */
-PersistentCollection dissocI(PersistentCollection coll, Iterable iter){
+PersistentCollection dissocI(PersistentCollection coll, Iterable iter) {
   return _dispatch(coll,
-     op: 'dissocI',
-     map:()=> (coll as PMap).withTransient((TMap t) =>
-         iter.forEach((arg) => t.doDelete(arg, missingOk: true))),
-     vec:()=> _dissocFromVector(coll as PVec, iter),
-     set:()=> (coll as PSet).withTransient((TSet t) =>
-         iter.forEach((arg) => t.doDelete(arg, missingOk: true)))
-  );
+      op: 'dissocI',
+      map: () => (coll as PMap).withTransient(
+          (TMap t) => iter.forEach((arg) => t.doDelete(arg, missingOk: true))),
+      vec: () => _dissocFromVector(coll as PVec, iter),
+      set: () => (coll as PSet).withTransient(
+          (TSet t) => iter.forEach((arg) => t.doDelete(arg, missingOk: true))));
 }
 
 //TODO implement doDelete from Vector more effective
 PVec _dissocFromVector(PVec pv, Iterable indexes) {
   var r = [];
   var indexesSet = indexes.toSet();
-  for(int i =0;i< pv.length;i++) (!indexesSet.contains(i))? r.add(pv[i]) : null;
+  for (int i = 0; i < pv.length; i++)
+    (!indexesSet.contains(i)) ? r.add(pv[i]) : null;
   return per(r);
 }
-
 
 /**
  * Returns a new [PVec] which is the result of removing duplicate elements inside [iter].
@@ -216,11 +249,10 @@ PVec distinct(Iterable iter) {
  */
 PersistentCollection empty(PersistentCollection coll) {
   return _dispatch(coll,
-     op: 'empty',
-     map:()=> new PMap(),
-     vec:()=> new PVec(),
-     set:()=> new PSet()
-  );
+      op: 'empty',
+      map: () => new PMap(),
+      vec: () => new PVec(),
+      set: () => new PSet());
 }
 
 /**
@@ -245,11 +277,10 @@ PersistentCollection empty(PersistentCollection coll) {
  */
 bool hasKey(PersistentCollection coll, key) {
   return _dispatch(coll,
-    op: 'hasKey',
-    map:()=> (coll as PMap).containsKey(key),
-    vec:()=> key >= 0 && key < (coll as PVec).length,
-    set:()=> (coll as PSet).contains(key)
-  );
+      op: 'hasKey',
+      map: () => (coll as PMap).containsKey(key),
+      vec: () => key >= 0 && key < (coll as PVec).length,
+      set: () => (coll as PSet).contains(key));
 }
 
 //TODO Sadly, it doesn't throw any specific Exceptions
@@ -302,7 +333,7 @@ dynamic get(PersistentCollection coll, key, [notFound = _none]) {
 getIn(PersistentCollection coll, Iterable keys, [notFound = _none]) {
   try {
     return _getIn(coll, keys, notFound);
-  } catch (e){
+  } catch (e) {
     throw new ArgumentError("Key path $keys doesn't exist in $coll, $e");
   }
 }
@@ -339,7 +370,7 @@ Pair find(PersistentCollection coll, key, [notFound = _none]) {
  *      assocIn(pm, ['a', 'c', 'd'], 17); // throws
  */
 dynamic assocIn(PersistentIndexedCollection coll, Iterable keys, val) {
-  try{
+  try {
     return _assocIn(coll, keys, val);
   } catch (e) {
     rethrow;
@@ -352,10 +383,10 @@ dynamic _assocIn(PersistentIndexedCollection coll, keys, val) {
   if (keys.length == 1) {
     return assoc(coll, keys.first, persist(val));
   } else {
-    return assoc(coll, keys.first, _assocIn(get(coll, keys.first), keys.skip(1), val));
+    return assoc(
+        coll, keys.first, _assocIn(get(coll, keys.first), keys.skip(1), val));
   }
 }
-
 
 /**
  * Returns a new persistent collection which is the result of [assoc] of apllied [f] to value under [keys] path in [coll].
@@ -371,7 +402,7 @@ dynamic _assocIn(PersistentIndexedCollection coll, keys, val) {
  *      updateIn(pm, ['a', 'c'], maybeInc) // == persist({'a': {'b': 10, 'c': 0}})
  */
 dynamic updateIn(PersistentIndexedCollection coll, Iterable keys, Function f) {
-  try{
+  try {
     return _updateIn(coll, keys, f);
   } catch (e) {
     rethrow;
@@ -382,9 +413,11 @@ dynamic updateIn(PersistentIndexedCollection coll, Iterable keys, Function f) {
 dynamic _updateIn(PersistentIndexedCollection coll, Iterable keys, f) {
   if (keys.length == 0) return f(coll);
   if (keys.length == 1) {
-    return assoc(coll, keys.first, hasKey(coll, keys.first)? f(get(coll,keys.first)) : f());
+    return assoc(coll, keys.first,
+        hasKey(coll, keys.first) ? f(get(coll, keys.first)) : f());
   } else {
-    return assoc(coll, keys.first, _updateIn(get(coll, keys.first), keys.skip(1), f));
+    return assoc(
+        coll, keys.first, _updateIn(get(coll, keys.first), keys.skip(1), f));
   }
 }
 
@@ -422,7 +455,7 @@ PMap zipmap(Iterable s0, Iterable s1) {
  */
 PVec subvec(PVec vector, start, [end]) {
   if (end == null) end = vector.length;
-  var numberOfElem = end-start;
+  var numberOfElem = end - start;
   if (numberOfElem < 0) numberOfElem = 0;
   return persist(vector.skip(start).take(numberOfElem));
 }
@@ -464,7 +497,8 @@ bool isEmpty(PersistentCollection coll) => (coll as Iterable).isEmpty;
  *      PersistentVector pv = persist([1, 2, 3]);
  *      reverse(pv); // == iterable(1, 2, 3)
  */
-Iterable reverse(PersistentCollection coll) => persist((coll as Iterable).toList().reversed);
+Iterable reverse(PersistentCollection coll) =>
+    persist((coll as Iterable).toList().reversed);
 
 /**
  * Get iterable from keys of [map] ([PMap]).
@@ -535,8 +569,7 @@ PSet difference(PSet s1, PSet s2) => s1.difference(s2);
  *      isSubset(ps2, ps1); // == true
  *      isSubset(ps1, ps2); // == false
  */
-bool isSubset(PSet s1, PSet s2) => intersection(s1,s2) == s1;
-
+bool isSubset(PSet s1, PSet s2) => intersection(s1, s2) == s1;
 
 /**
  * Returns true if [PSet] [s1] is a superset of [s2].
@@ -552,27 +585,39 @@ bool isSuperset(PSet s1, PSet s2) => isSubset(s2, s1);
 
 // ------------------- SEQUENCES ---------------------
 
-first(Iterable i) => i.isEmpty ? null: i.first;
+first(Iterable i) => i.isEmpty ? null : i.first;
 
 Iterable rest(Iterable i) => i.skip(1);
 
 Iterable seq(dynamic c) {
- if (c is Iterable) {
-   return c;
- } else if (c is String){
-   return c.split('');
- } else if (c is Map) {
-  return persist(c);
- }
- throw new ArgumentError("Can't convert ${c.runtimeType} to Iterable");
+  if (c is Iterable) {
+    return c;
+  } else if (c is String) {
+    return c.split('');
+  } else if (c is Map) {
+    return persist(c);
+  }
+  throw new ArgumentError("Can't convert ${c.runtimeType} to Iterable");
 }
 
-cons(dynamic val, dynamic coll) => [[val], seq(coll)].expand((x) => x);
+cons(dynamic val, dynamic coll) => [
+      [val],
+      seq(coll)
+    ].expand((x) => x);
 
 concatI(Iterable<dynamic> a) => a.map((e) => seq(e)).expand((x) => x);
 
-concat(arg0, arg1, [arg2 = _none, arg3 = _none, arg4 = _none, arg5 = _none, arg6 = _none, arg7 = _none, arg8 = _none, arg9 = _none])
-  => concatI([arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9].where((x) => x != _none));
+concat(arg0, arg1,
+        [arg2 = _none,
+        arg3 = _none,
+        arg4 = _none,
+        arg5 = _none,
+        arg6 = _none,
+        arg7 = _none,
+        arg8 = _none,
+        arg9 = _none]) =>
+    concatI([arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9]
+        .where((x) => x != _none));
 
 //flatten ?? what to do on maps? sets?
 
@@ -582,8 +627,19 @@ Iterable map(f, Iterable i) => i.map(f);
 
 Iterable mapcatI(f, Iterable<Iterable> ii) => concatI(ii.map((i) => map(f, i)));
 
-mapcat(f, arg0, arg1, [arg2 = _none, arg3 = _none, arg4 = _none, arg5 = _none, arg6 = _none, arg7 = _none, arg8 = _none, arg9 = _none])
-  => mapcatI(f, [arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9].where((x) => x != _none));
+mapcat(f, arg0, arg1,
+        [arg2 = _none,
+        arg3 = _none,
+        arg4 = _none,
+        arg5 = _none,
+        arg6 = _none,
+        arg7 = _none,
+        arg8 = _none,
+        arg9 = _none]) =>
+    mapcatI(
+        f,
+        [arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9]
+            .where((x) => x != _none));
 
 Iterable filter(pred, Iterable coll) => coll.where(pred);
 
@@ -614,7 +670,9 @@ reduce(f, second, [third = _none]) {
   }
   if (seq.isEmpty) return f();
   if (rest(seq).isEmpty) return first(seq);
-  return (initialVal == _none)? rest(seq).fold(first(seq), f) : seq.fold(initialVal, f);
+  return (initialVal == _none)
+      ? rest(seq).fold(first(seq), f)
+      : seq.fold(initialVal, f);
 }
 
 //reduce_kv do we want it ???

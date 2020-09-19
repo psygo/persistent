@@ -7,7 +7,7 @@
 library functions_list_test;
 
 import 'package:vacuum_persistent/persistent.dart';
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 
 main() {
   run();
@@ -39,7 +39,7 @@ run() {
     test("- List Map Set throws", () {
       expect(() => conj([], 5), throws);
       expect(() => conj({}, [1, 2]), throws);
-      expect(() => conj(new Set.from({}), [1, 2]), throws);
+      expect(() => conj(Set.from({}), [1, 2]), throws);
     });
   });
 

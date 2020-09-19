@@ -6,7 +6,7 @@
 
 library randomized_vector_test;
 
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 import 'package:vacuum_persistent/persistent.dart';
 import 'dart:core';
 import 'utils.dart';
