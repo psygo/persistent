@@ -10,10 +10,10 @@ class Cursor {
   final Reference _ref;
   final PVec _path;
 
-  Cursor(Reference this._ref, Iterable path) :
-    _path = (path is PVec)? path: PVec.from(path);
+  Cursor(Reference this._ref, Iterable path)
+      : _path = (path is PVec) ? path : PVec.from(path);
 
-  Cursor operator[](val) => Cursor(_ref, conj(_path, val) as PVec);
+  Cursor operator [](val) => Cursor(_ref, conj(_path, val) as PVec);
 
   deref([notFound = _none]) => getIn(_ref.deref(), _path, notFound);
 

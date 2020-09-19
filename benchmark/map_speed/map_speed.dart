@@ -23,38 +23,42 @@ Map interfaces = {
 int times = 4;
 
 void main() {
-
   var config = [
-   {'name': 'Write',
-    'creator': ((sample, factory) => (new WriteBenchmark(sample, factory))),
+    {
+      'name': 'Write',
+      'creator': ((sample, factory) => (new WriteBenchmark(sample, factory))),
 //    'sizes': [{10000: 1}, ],
-    'sizes': [{500:60, 1000: 30, 1500: 20, 3000: 10}],
-   },
-   {
-     'name': 'Read',
-     'creator': ((sample, factory) => (new ReadBenchmark(sample, factory))),
+      'sizes': [
+        {500: 60, 1000: 30, 1500: 20, 3000: 10}
+      ],
+    },
+    {
+      'name': 'Read',
+      'creator': ((sample, factory) => (new ReadBenchmark(sample, factory))),
 //     'sizes': [{10000: 1}, ],
-     'sizes': [{500:60, 1000: 30, 1500: 20, 3000: 10}],
-   }
+      'sizes': [
+        {500: 60, 1000: 30, 1500: 20, 3000: 10}
+      ],
+    }
   ];
   var result = {};
-  config.forEach((conf){
+  config.forEach((conf) {
     String mode = conf['name'];
     var creator = conf['creator'];
     for (Map sample in conf['sizes']) {
       var res = {};
       var dev = {};
-      interfaces.forEach((k,v){
+      interfaces.forEach((k, v) {
         res[k] = 0;
         dev[k] = 0;
       });
-      for (int i=0; i<times; i++){
+      for (int i = 0; i < times; i++) {
         for (String name in interfaces.keys) {
           var meas = creator(sample, interfaces[name]).measure();
           meas /= 1000; // we want milliseconds
           meas /= 10; //to compensate for tenfold error in benchmark harness
           res[name] += meas;
-          dev[name] += meas*meas;
+          dev[name] += meas * meas;
         }
       }
       for (String name in interfaces.keys) {
@@ -63,9 +67,13 @@ void main() {
         dev[name] = sqrt(dev[name] - res[name] * res[name]);
       }
       for (String name in interfaces.keys) {
-        var _dev = 2*(res[name]*dev['Map']+res['Map']*dev[name])/res['Map']/res['Map']/sqrt(times);
-        print('${mode} ${name} sample ${sample}: ${res[name]/res['Map']} '+
-              '+- ${_dev} (${res[name]} ms)');
+        var _dev = 2 *
+            (res[name] * dev['Map'] + res['Map'] * dev[name]) /
+            res['Map'] /
+            res['Map'] /
+            sqrt(times);
+        print('${mode} ${name} sample ${sample}: ${res[name] / res['Map']} ' +
+            '+- ${_dev} (${res[name]} ms)');
       }
     }
   });

@@ -6,8 +6,7 @@
 
 part of vector_speed;
 
-abstract class BenchmarkInterface<E>{
-
+abstract class BenchmarkInterface<E> {
   void create();
   void push(E value);
   void set(int index, E value);
@@ -18,20 +17,17 @@ abstract class BenchmarkInterface<E>{
   void restore();
 }
 
-
-abstract class EncapsulatingInterface<E, T>
-  extends BenchmarkInterface<E>{
-
+abstract class EncapsulatingInterface<E, T> extends BenchmarkInterface<E> {
   T object = null;
   T object_copy = null;
 
   T _copy();
 
-  save(){
+  save() {
     object_copy = _copy();
   }
 
-  restore(){
+  restore() {
     object = object_copy;
   }
 }

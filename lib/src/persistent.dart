@@ -31,7 +31,7 @@ int _combine(int hash, int value) {
 }
 
 int _finish(int hash) {
-  hash = 0x1fffffff & (hash + ((0x03ffffff & hash) <<  3));
+  hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
   hash = hash ^ (hash >> 11);
   return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
 }
@@ -43,22 +43,19 @@ int _finish(int hash) {
  * Works recursively.
  */
 persist(from) {
-  if(from is PersistentCollection) return from;
-  if(from is Map) {
+  if (from is PersistentCollection) return from;
+  if (from is Map) {
     var map = new PMap();
     return map.withTransient((map) {
-      from.forEach((key,value) => map.doAssoc(per(key), per(value)));
+      from.forEach((key, value) => map.doAssoc(per(key), per(value)));
     });
-  }
-  else if (from is Set) {
+  } else if (from is Set) {
     from = from.map((e) => persist(e));
     return new PSet.from(from);
-  }
-  else if(from is Iterable) {
+  } else if (from is Iterable) {
     from = from.map((e) => persist(e));
     return new PVec.from(from);
-  }
-  else {
+  } else {
     return from;
   }
 }
@@ -66,7 +63,7 @@ persist(from) {
 /// Alias for [persist]
 per(from) => persist(from);
 
-class None{
+class None {
   const None();
 }
 
@@ -85,20 +82,16 @@ lookupIn(PersistentIndexedCollection structure, List path, {notFound}) =>
     _lookupIn(structure, path.iterator, notFound: notFound);
 
 _lookupIn(dynamic s, Iterator path, {notFound}) {
-  if(!path.moveNext()) return s;
-  if(s is PMap) {
+  if (!path.moveNext()) return s;
+  if (s is PMap) {
     return _lookupIn(s.get(path.current, notFound), path, notFound: notFound);
-  }
-  else if(s is PVec) {
+  } else if (s is PVec) {
     return _lookupIn(s.get(path.current, notFound), path, notFound: notFound);
-  }
-  else if(s is TMap) {
+  } else if (s is TMap) {
     return _lookupIn(s.get(path.current, notFound), path, notFound: notFound);
-  }
-  else if(s is TVec) {
+  } else if (s is TVec) {
     return _lookupIn(s.get(path.current, notFound), path, notFound: notFound);
-  }
-  else {
+  } else {
     throw new Exception('This should not happen');
   }
 }
@@ -109,48 +102,41 @@ _lookupIn(dynamic s, Iterator path, {notFound}) {
  *
  * This will not create any middleway structures.
  */
-PersistentCollection insertIn(PersistentIndexedCollection structure, Iterable path, dynamic value) =>
+PersistentCollection insertIn(
+        PersistentIndexedCollection structure, Iterable path, dynamic value) =>
     _insertIn(structure, path.iterator..moveNext(), value);
 
 PersistentCollection _insertIn(s, Iterator path, dynamic value) {
   var current = path.current;
-  if(path.moveNext()) { //path continues
-    if(s is PMap) {
+  if (path.moveNext()) {
+    //path continues
+    if (s is PMap) {
       return s.assoc(current, _insertIn(s.get(current), path, value));
-    }
-    else if(s is PVec) {
+    } else if (s is PVec) {
       return s.set(current, _insertIn(s.get(current), path, value));
-    }
-    else if(s is TMap) {
+    } else if (s is TMap) {
       return s.doAssoc(current, _insertIn(s.get(current), path, value));
-    }
-    else if(s is TVec) {
+    } else if (s is TVec) {
       return s.doSet(current, _insertIn(s.get(current), path, value));
-    }
-    else {
+    } else {
       throw new Exception('This should not happen');
     }
-  }
-  else {
-    if(s is PMap) {
+  } else {
+    if (s is PMap) {
       return s.assoc(current, value);
-    }
-    else if(s is PVec) {
-      if(current == s.length) {
+    } else if (s is PVec) {
+      if (current == s.length) {
         return s.push(value);
       }
       return s.set(current, value);
-    }
-    else if(s is TMap) {
+    } else if (s is TMap) {
       return s.doAssoc(current, value);
-    }
-    else if(s is TVec) {
-      if(current == s.length) {
+    } else if (s is TVec) {
+      if (current == s.length) {
         return s.doPush(value);
       }
       return s.doSet(current, value);
-    }
-    else {
+    } else {
       throw new Exception('This should not happen');
     }
   }
@@ -164,47 +150,47 @@ PersistentCollection _insertIn(s, Iterator path, dynamic value) {
  * If the [path] does not exist and [safe] is specified as `true`,
  * the same map is returned.
  */
-PersistentCollection deleteIn(PersistentIndexedCollection structure, List path, {bool safe: false}) =>
+PersistentCollection deleteIn(PersistentIndexedCollection structure, List path,
+        {bool safe: false}) =>
     _deleteIn(structure, path.iterator..moveNext(), safe: safe);
 
 PersistentCollection _deleteIn(s, Iterator path, {bool safe: false}) {
   var current = path.current;
-  if(path.moveNext()) { //path continues
-    if(s is PMap) {
+  if (path.moveNext()) {
+    //path continues
+    if (s is PMap) {
       var deleted = _deleteIn(s.get(current), path, safe: safe);
       return s.assoc(current, deleted);
-    }
-    else if(s is PVec) {
+    } else if (s is PVec) {
       var deleted = _deleteIn(s.get(current), path, safe: safe);
       return s.set(current, deleted);
-    }
-    else if(s is TMap) {
+    } else if (s is TMap) {
       var deleted = _deleteIn(s.get(current), path, safe: safe);
       return s.doAssoc(current, deleted);
-    }
-    else if(s is TVec) {
+    } else if (s is TVec) {
       var deleted = _deleteIn(s.get(current), path, safe: safe);
-      return s.doSet(current, deleted);  }
-    else {
+      return s.doSet(current, deleted);
+    } else {
       throw new Exception('This should not happen');
     }
-  }
-  else {
-    if(s is PMap) {
+  } else {
+    if (s is PMap) {
       return s.delete(current);
-    }
-    else if(s is PVec) {
-      if(s.length - 1 == current) return s.pop();
-      else throw new Exception('Cannot delete non last element in PersistentVector');
-    }
-    else if(s is TMap) {
+    } else if (s is PVec) {
+      if (s.length - 1 == current)
+        return s.pop();
+      else
+        throw new Exception(
+            'Cannot delete non last element in PersistentVector');
+    } else if (s is TMap) {
       return s.doDelete(current);
-    }
-    else if(s is TVec) {
-      if(s.length - 1 == current) return s.doPop();
-      else throw new Exception('Cannot delete non last element in TransientVector');
-    }
-    else {
+    } else if (s is TVec) {
+      if (s.length - 1 == current)
+        return s.doPop();
+      else
+        throw new Exception(
+            'Cannot delete non last element in TransientVector');
+    } else {
       throw new Exception('This should not happen');
     }
   }

@@ -6,36 +6,32 @@
 
 part of vector_speed;
 
-class WriteBenchmark extends BenchmarkBase{
-
+class WriteBenchmark extends BenchmarkBase {
   final int size;
   final BenchmarkInterface object;
 
+  WriteBenchmark(size, object, name)
+      : size = size,
+        object = object,
+        super("Writing $name($size)");
 
-  WriteBenchmark(size, object, name):
-    size = size,
-    object = object,
-    super("Writing $name($size)");
-
-
-  void run(){
-
+  void run() {
     object.create();
 
     for (int i = 0; i < size; i++) {
-      object.push("${i}".padLeft(8,"0"));
+      object.push("${i}".padLeft(8, "0"));
     }
 
-    for (int i = size-1; i >= 0; i--) {
-      object.set(i, "${i}".padLeft(8,"_"));
+    for (int i = size - 1; i >= 0; i--) {
+      object.set(i, "${i}".padLeft(8, "_"));
     }
 
     for (int i = 0; i < size; i++) {
-      object.set(i, "${i}".padLeft(8,"x"));
+      object.set(i, "${i}".padLeft(8, "x"));
     }
 
     object.save();
-    for (int i = size-1 ; i >= 0; i--) {
+    for (int i = size - 1; i >= 0; i--) {
       object.pop();
     }
 
@@ -46,29 +42,25 @@ class WriteBenchmark extends BenchmarkBase{
   }
 }
 
-class ReadBenchmark extends BenchmarkBase{
-
+class ReadBenchmark extends BenchmarkBase {
   final int size;
   final BenchmarkInterface object;
 
+  ReadBenchmark(size, object, name)
+      : size = size,
+        object = object,
+        super("Reading $name($size)");
 
-  ReadBenchmark(size, object, name):
-    size = size,
-    object = object,
-    super("Reading $name($size)");
-
-  void setup(){
-
+  void setup() {
     object.create();
 
     for (int i = 0; i < size; i++) {
-      object.push("${i}".padLeft(8,"0"));
+      object.push("${i}".padLeft(8, "0"));
     }
   }
 
-  void run(){
-
-    for (int i = size-1; i >= 0; i--) {
+  void run() {
+    for (int i = size - 1; i >= 0; i--) {
       object.get(i);
     }
 

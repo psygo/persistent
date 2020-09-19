@@ -324,8 +324,7 @@ abstract class _Node<K, V> extends IterableBase<Pair<K, V>>
 
   static V _returnRight<V>(V left, V right) => right;
 
-  PMap<K, V> union(PMap<K, V> other,
-      [V combine(V left, V right)]) {
+  PMap<K, V> union(PMap<K, V> other, [V combine(V left, V right)]) {
     if (combine == null) combine = _returnRight;
     if (other is _Node) {
       return _union(other as _Node, combine, maxDepth);
@@ -377,7 +376,7 @@ class _Leaf<K, V> extends _Node<K, V> {
 
   /// check whether order-by-hashcode invariant (see technical.md) holds
   void sanityCheck() {
-    var lasthash = - double.infinity;
+    var lasthash = -double.infinity;
     for (int i = 0; i < _kv.length; i += recsize) {
       if (lasthash > _kv[i]) {
         throw new Exception('invariant violated');

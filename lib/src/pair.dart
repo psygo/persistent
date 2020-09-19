@@ -6,14 +6,12 @@
 
 part of persistent;
 
-
 /**
  * A pair of two values encapsulated to the single object.
  *
  * Mostly used to represent key-value pairs in dictionaries.
  */
 class Pair<A, B> {
-
   /// fst value
   final A fst;
 
@@ -32,16 +30,17 @@ class Pair<A, B> {
    * values are equal.
    */
   bool operator ==(other) {
-    return (other is Pair<A, B>)
-        && fst == other.fst
-        && snd == other.snd;
+    return (other is Pair<A, B>) && fst == other.fst && snd == other.snd;
   }
 
   operator [](int pos) {
     switch (pos) {
-      case 0: return fst;
-      case 1: return snd;
-      default: throw new RangeError("Pair does not contain value on position $pos");
+      case 0:
+        return fst;
+      case 1:
+        return snd;
+      default:
+        throw new RangeError("Pair does not contain value on position $pos");
     }
   }
 

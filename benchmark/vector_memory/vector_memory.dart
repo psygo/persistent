@@ -14,31 +14,27 @@ List template = [];
 List data = [];
 
 var creators = {
-
   "persistent": () => new PVec.from(template),
-
   "list": () => new List.from(template),
 };
 
 void run(int template_size, String mode) {
-
-  template.addAll(new List.generate(template_size, (i)=>"$i".padLeft(8)));
+  template.addAll(new List.generate(template_size, (i) => "$i".padLeft(8)));
 
   int allocated = 0;
-  for(bool go = true; go; allocated++){
-    try{
+  for (bool go = true; go; allocated++) {
+    try {
       go = false;
       var a = creators[mode]();
       data.add(a);
       go = true;
       print(1073741824.0 / allocated / template_size);
-    } catch(e) {
+    } catch (e) {
       data = null;
     }
   }
 }
 
-main(List<String> args){
-
+main(List<String> args) {
   run(int.parse(args[0]), args[1]);
 }

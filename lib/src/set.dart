@@ -13,7 +13,6 @@ part of persistent;
  * specifies the common interface of [PVec] and [TVec].
  */
 abstract class ReadSet<E> implements Iterable<E> {
-
   bool hasKey(E key);
 
   /**
@@ -29,7 +28,6 @@ abstract class ReadSet<E> implements Iterable<E> {
  * creation of slightly mutated copies.
  */
 abstract class PSet<E> implements ReadSet<E>, PersistentCollection {
-
   /// Creates an empty [PSet] using its default implementation.
   factory PSet() => new _PSetImpl<E>();
 
@@ -89,10 +87,10 @@ abstract class PSet<E> implements ReadSet<E>, PersistentCollection {
    * such that `first` is included in `this` and
    * `second` is included in [other]
    */
-  Iterable<Pair<E,dynamic>> cartesianProduct(PSet other);
+  Iterable<Pair<E, dynamic>> cartesianProduct(PSet other);
 
   /// Alias for [cartesianProduct].
-  Iterable<Pair<E,dynamic>> operator *(PSet other);
+  Iterable<Pair<E, dynamic>> operator *(PSet other);
 
   /**
    * Returns a new set of all the elements that are included
@@ -112,7 +110,7 @@ abstract class PSet<E> implements ReadSet<E>, PersistentCollection {
    * Two persistent sets are equal if and only if for each element
    * in any of them exists an equal element in the other one.
    */
-  bool operator==(other);
+  bool operator ==(other);
 
   /*
    * The documentation is inherited from the Object
@@ -131,7 +129,6 @@ abstract class PSet<E> implements ReadSet<E>, PersistentCollection {
  * structure.
  */
 abstract class TSet<E> implements ReadSet<E> {
-
   /**
    * Adds [element] to `this`.
    *

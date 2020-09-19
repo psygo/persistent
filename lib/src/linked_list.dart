@@ -39,7 +39,7 @@ abstract class LinkedList<E> implements Iterable<E> {
    * Two linked lists are equal if and only if they have same lengths,
    * and for each possition, the elements at it are equal.
    */
-  bool operator==(other);
+  bool operator ==(other);
 
   // Documentation inherited from Object
   int get hashCode;
@@ -68,9 +68,8 @@ class LinkedListBuilder<E> {
    * optional [tail].
    */
   LinkedList<E> build([tail = null]) {
-    if (tail == null)
-      tail = new Nil<E>();
-    for (E x in _data.reversed){
+    if (tail == null) tail = new Nil<E>();
+    for (E x in _data.reversed) {
       tail = new Cons<E>(x, tail);
     }
     return tail;
@@ -79,7 +78,6 @@ class LinkedListBuilder<E> {
 
 abstract class _LinkedListBase<E> extends IterableBase<E>
     implements LinkedList<E> {
-
   const _LinkedListBase();
 
   void foreach(f(A)) {
@@ -139,7 +137,7 @@ class Nil<E> extends _LinkedListBase<E> {
 
   Iterator<E> get iterator => const _NilIterator();
 
-  bool operator==(other) => other is LinkedList ? other.isNil : false;
+  bool operator ==(other) => other is LinkedList ? other.isNil : false;
 
   int get hashCode => 0;
 }
@@ -178,11 +176,11 @@ class Cons<E> extends _LinkedListBase<E> {
   /// The rest of this - without the first element
   final LinkedList<E> tail;
 
-  Cons(elem, tail):
-    elem = elem,
-    tail = tail,
-    length = tail.length + 1,
-    hashCode = hash2(elem.hashCode, tail.hashCode);
+  Cons(elem, tail)
+      : elem = elem,
+        tail = tail,
+        length = tail.length + 1,
+        hashCode = hash2(elem.hashCode, tail.hashCode);
 
   bool get isNil => false;
   bool get isCons => true;
@@ -193,20 +191,18 @@ class Cons<E> extends _LinkedListBase<E> {
 
   Iterator<E> get iterator => new _ConsIterator<E>(this);
 
-  bool operator==(other){
+  bool operator ==(other) {
     if (other is! LinkedList) return false;
-    if ( !other.isCons
-      || this.hashCode != other.hashCode
-      || this.length != other.length
-    ) return false;
+    if (!other.isCons ||
+        this.hashCode != other.hashCode ||
+        this.length != other.length) return false;
     var x = this;
     var y = other;
-    while(x.isCons){
-      if(x.elem != y.elem) return false;
+    while (x.isCons) {
+      if (x.elem != y.elem) return false;
       x = x.tail;
       y = y.tail;
     }
     return true;
   }
-
 }

@@ -13,7 +13,6 @@ part of persistent;
  * specifies the common interface of [PVec] and [TVec].
  */
 abstract class ReadVector<E> implements Iterable<E> {
-
   /**
    * Returns element at given [index].
    *
@@ -36,7 +35,7 @@ abstract class ReadVector<E> implements Iterable<E> {
    *     print(v[0]); // prints "Hello"
    *     print(v[2]); // throws RangeError
    */
-  E operator[](int index);
+  E operator [](int index);
 
   /// The first element of `this`
   E get first;
@@ -48,7 +47,6 @@ abstract class ReadVector<E> implements Iterable<E> {
   bool hasKey(int key);
 }
 
-
 /**
  * A persistent vector, resizable ordered collection of elements of type [E].
  *
@@ -56,7 +54,6 @@ abstract class ReadVector<E> implements Iterable<E> {
  * creation of slightly mutated copies.
  */
 abstract class PVec<E> implements ReadVector<E>, PersistentIndexedCollection {
-
   /**
    * Returns a new vector identical to `this` except that
    * element at [index] is [value].
@@ -115,7 +112,8 @@ abstract class PVec<E> implements ReadVector<E>, PersistentIndexedCollection {
    * Creates an [PVec] filled by [values]
    * using its default implementation.
    */
-  factory PVec.from(Iterable<E> values) => new _PersistentVectorImpl.from(values);
+  factory PVec.from(Iterable<E> values) =>
+      new _PersistentVectorImpl.from(values);
 
   /**
    * Creates transient copy of `this`, lets it to be modified by [change]
@@ -128,21 +126,19 @@ abstract class PVec<E> implements ReadVector<E>, PersistentIndexedCollection {
    */
   PVec<E> withTransient(void change(TVec<E> vect));
 
-
   /**
    * The equality operator.
    *
    * Two persistent vectors are equal if and only if they have same lengths,
    * and for each index, the values at it are equal.
    */
-  bool operator==(other);
+  bool operator ==(other);
 
   /*
    * The documentation is inherited from the Object
    */
   int get hashCode;
 }
-
 
 /**
  * A transient vector, resizable ordered collection of elements of type [E].
@@ -153,7 +149,6 @@ abstract class PVec<E> implements ReadVector<E>, PersistentIndexedCollection {
  * structure.
  */
 abstract class TVec<E> implements ReadVector<E> {
-
   /**
    * Sets the element at [index] to be [value].
    *

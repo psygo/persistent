@@ -33,7 +33,7 @@ run() {
   test('After change of value notification come.', () {
     var r = new Reference(10);
     expect(r.onChange.first, completion(per({'oldVal': 10, 'newVal': 15})));
-    r.update((_)=> 15);
+    r.update((_) => 15);
   });
 
   test('After change of value notification come.', () {

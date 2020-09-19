@@ -12,8 +12,7 @@ const int _MASK = _SIZE - 1;
 var _NOT_SET;
 
 _getNotSet() {
-  if (_NOT_SET == null)
-    _NOT_SET = {};
+  if (_NOT_SET == null) _NOT_SET = {};
   return _NOT_SET;
 }
 
@@ -55,9 +54,9 @@ abstract class _BaseVectorImpl<E> extends _PersistentVectorBase<E> {
   E _get(int index, [E notFound = _none]) {
     try {
       index = _checkIndex(index);
-    } catch(e) {
+    } catch (e) {
       if (notFound == _none) {
-        throw(e);
+        throw (e);
       } else {
         return notFound;
       }
@@ -79,7 +78,8 @@ abstract class _BaseVectorImpl<E> extends _PersistentVectorBase<E> {
     if (index >= _getTailOffset(vector._size)) {
       newTail = newTail._update(vector._owner, 0, index, value, didAlter);
     } else {
-      newRoot = newRoot._update(vector._owner, vector._level, index, value, didAlter);
+      newRoot =
+          newRoot._update(vector._owner, vector._level, index, value, didAlter);
     }
     if (!didAlter.value) {
       return vector;
@@ -90,16 +90,18 @@ abstract class _BaseVectorImpl<E> extends _PersistentVectorBase<E> {
       vector.__altered = true;
       return vector;
     }
-    return new _PersistentVectorImpl._make(vector._size, vector._level, newRoot, newTail);
+    return new _PersistentVectorImpl._make(
+        vector._size, vector._level, newRoot, newTail);
   }
 
   _BaseVectorImpl<E> _push(E value) {
     var len = this.length;
-    return this._withTransient((vect) => vect._resize(len+1)._set(len, value));
+    return this
+        ._withTransient((vect) => vect._resize(len + 1)._set(len, value));
   }
 
   _BaseVectorImpl<E> _pop() {
-    return this._resize(this.length-1);
+    return this._resize(this.length - 1);
   }
 
   int _getTailOffset(int size) {
@@ -149,21 +151,24 @@ abstract class _BaseVectorImpl<E> extends _PersistentVectorBase<E> {
     var oldTailOffset = _getTailOffset(oldSize);
     var newTailOffset = _getTailOffset(newSize);
     while (newTailOffset >= 1 << (newLevel + _SHIFT)) {
-      newRoot = new _VNode(newRoot != null && newRoot.length > 0 ? [newRoot] : [], owner);
+      newRoot = new _VNode(
+          newRoot != null && newRoot.length > 0 ? [newRoot] : [], owner);
       newLevel += _SHIFT;
     }
 
     var oldTail = _tail;
-    var newTail = newTailOffset < oldTailOffset ?
-      _vectorNodeFor(newSize - 1) :
-        newTailOffset > oldTailOffset ? new _VNode([], owner) : oldTail;
+    var newTail = newTailOffset < oldTailOffset
+        ? _vectorNodeFor(newSize - 1)
+        : newTailOffset > oldTailOffset
+            ? new _VNode([], owner)
+            : oldTail;
 
     if (newTailOffset > oldTailOffset && oldSize > 0 && oldTail.length > 0) {
       newRoot = _transientVNode(newRoot, owner);
       var node = newRoot;
       for (var level = newLevel; level > _SHIFT; level -= _SHIFT) {
         var idx = (oldTailOffset >> level) & _MASK;
-        node._set(idx , _transientVNode(node._get(idx), owner));
+        node._set(idx, _transientVNode(node._get(idx), owner));
         node = node._get(idx);
       }
       node._set((oldTailOffset >> _SHIFT) & _MASK, oldTail);
@@ -201,7 +206,6 @@ abstract class _BaseVectorImpl<E> extends _PersistentVectorBase<E> {
       return this;
     }
     return new _PersistentVectorImpl._make(newSize, newLevel, newRoot, newTail);
-
   }
 
   // TODO: debug funkcia, umazat
@@ -218,9 +222,11 @@ abstract class _BaseVectorImpl<E> extends _PersistentVectorBase<E> {
     }
     if (ownerID == null) {
       this._owner = ownerID;
-      return new _PersistentVectorImpl._make(this._size, this._level, this._root, this._tail);
+      return new _PersistentVectorImpl._make(
+          this._size, this._level, this._root, this._tail);
     }
-    return new _TransientVectorImpl._make(this._size, this._level, this._root, this._tail, ownerID);
+    return new _TransientVectorImpl._make(
+        this._size, this._level, this._root, this._tail, ownerID);
   }
 
   _TransientVectorImpl _asTransient() {
@@ -236,7 +242,6 @@ abstract class _BaseVectorImpl<E> extends _PersistentVectorBase<E> {
     fn(transient);
     return transient.wasAltered() ? transient._ensureOwner(this._owner) : this;
   }
-
 }
 
 class _VectorIterator<E> implements Iterator<E> {
@@ -248,7 +253,7 @@ class _VectorIterator<E> implements Iterator<E> {
   E get current => (_current != null) ? _current.current : null;
 
   bool moveNext() {
-    while(_index < _array.length) {
+    while (_index < _array.length) {
       if (_current == null) {
         _current = _array[_index].iterator;
       }
@@ -291,7 +296,8 @@ class _VNode {
     }
   }
 
-  _get(int index) => (index >= 0 && index < this.length) ? this._array[index] : null;
+  _get(int index) =>
+      (index >= 0 && index < this.length) ? this._array[index] : null;
 
   _VNode _removeAfter(_Owner ownerID, int newSize) {
     var sizeIndex = (newSize - 1) & _MASK;
@@ -305,7 +311,6 @@ class _VNode {
       editable._array.removeRange(sizeIndex + 1, editable.length);
     }
     return editable;
-
   }
 
   _VNode _update(ownerID, level, index, value, _Bool didAlter) {
@@ -324,7 +329,8 @@ class _VNode {
       } else {
         lowerNode = null;
       }
-      var newLowerNode = lowerNode._update(ownerID, level - _SHIFT, index, value, didAlter);
+      var newLowerNode =
+          lowerNode._update(ownerID, level - _SHIFT, index, value, didAlter);
       if (newLowerNode == lowerNode) {
         return node;
       }
@@ -356,10 +362,10 @@ _VNode _transientVNode(_VNode node, _Owner ownerID) {
   return new _VNode(node != null ? node._array.sublist(0) : [], ownerID);
 }
 
-class _PersistentVectorImpl<E extends None> extends _BaseVectorImpl<E> implements PVec<E> {
+class _PersistentVectorImpl<E extends None> extends _BaseVectorImpl<E>
+    implements PVec<E> {
   // cached hashCode.
   int _hashCode = null;
-
 
   factory _PersistentVectorImpl.from(Iterable<E> values) {
     if (values.length == 0) {
@@ -375,10 +381,12 @@ class _PersistentVectorImpl<E extends None> extends _BaseVectorImpl<E> implement
     return result;
   }
 
-  factory _PersistentVectorImpl.empty() => new _PersistentVectorImpl._prototype();
+  factory _PersistentVectorImpl.empty() =>
+      new _PersistentVectorImpl._prototype();
   _PersistentVectorImpl._prototype() : super._prototype();
 
-  factory _PersistentVectorImpl._make(int size, int level, _VNode root, _VNode tail) {
+  factory _PersistentVectorImpl._make(
+      int size, int level, _VNode root, _VNode tail) {
     var x = new _PersistentVectorImpl._prototype();
     x._size = size;
     x._level = level;
@@ -395,7 +403,7 @@ class _PersistentVectorImpl<E extends None> extends _BaseVectorImpl<E> implement
     return this._hashCode;
   }
 
-  bool operator==(other) {
+  bool operator ==(other) {
     if (other is! _PersistentVectorImpl) return false;
     _PersistentVectorImpl otherVector = other;
     if (this.hashCode != otherVector.hashCode) return false;
@@ -419,13 +427,15 @@ class _PersistentVectorImpl<E extends None> extends _BaseVectorImpl<E> implement
   _PersistentVectorImpl pop() => _pop();
   _PersistentVectorImpl set(int index, E value) => _set(index, value);
   E get(int index, [E notFound = _none]) => _get(index, notFound);
-  E operator[](int index) => get(index);
+  E operator [](int index) => get(index);
 }
 
-class _TransientVectorImpl<E extends None> extends _BaseVectorImpl<E> implements TVec<E> {
+class _TransientVectorImpl<E extends None> extends _BaseVectorImpl<E>
+    implements TVec<E> {
   _TransientVectorImpl._prototype() : super._prototype();
 
-  factory _TransientVectorImpl._make(int size, int level, _VNode root, _VNode tail, _Owner ownerID) {
+  factory _TransientVectorImpl._make(
+      int size, int level, _VNode root, _VNode tail, _Owner ownerID) {
     var x = new _TransientVectorImpl._prototype();
     x._size = size;
     x._level = level;
@@ -451,14 +461,17 @@ class _TransientVectorImpl<E extends None> extends _BaseVectorImpl<E> implements
   void doPush(E value) {
     _push(value);
   }
+
   void doPop() {
     _pop();
   }
+
   E get(int index, [E notFound = _none]) => _get(index, notFound);
-  E operator[](int index) => _get(index);
+  E operator [](int index) => _get(index);
   void doSet(int index, E value) {
     _set(index, value);
   }
+
   void operator []=(int index, E value) {
     _set(index, value);
   }

@@ -9,17 +9,17 @@ library map_test;
 import 'package:vacuum_persistent/persistent.dart';
 import 'package:test/test.dart';
 
-
 class Element {
   var value, hash;
   Element(this.value, this.hash);
   get hashCode => hash;
-  operator ==(other){
+  operator ==(other) {
     if (other is! Element) {
       return false;
     }
     return value == other.value;
   }
+
   toString() => "Element(${value},${hash})";
 }
 
@@ -35,7 +35,6 @@ run() {
       expect(pm.toMap(), equals({'a': 'b'}));
       pm = pm.assoc('a', 'c');
       expect(pm.toMap(), equals({'a': 'c'}));
-
     });
 
     test('get', () {
@@ -45,7 +44,7 @@ run() {
 
       expect(pm.get('a'), equals('b'));
       expect(() => pm.get('c'), throws);
-      expect(pm.get('c','none'), equals('none'));
+      expect(pm.get('c', 'none'), equals('none'));
     });
 
     test('delete', () {
@@ -58,37 +57,38 @@ run() {
     });
 
     test('update', () {
-      PMap pm = persist({'a':'b', 'c': 'd'});
-      expect(pm.update('c', (v) => 'updated $v'), equals(persist({'a': 'b', 'c': 'updated d'})));
+      PMap pm = persist({'a': 'b', 'c': 'd'});
+      expect(pm.update('c', (v) => 'updated $v'),
+          equals(persist({'a': 'b', 'c': 'updated d'})));
     });
 
-    test('equality speed', (){
+    test('equality speed', () {
       PMap pm;
       Map m = {};
-      for(int i=0; i<100000; i++) {
+      for (int i = 0; i < 100000; i++) {
         m['hello${i}'] = 'world${i}';
       }
       pm = persist(m);
       // more important than the 'expect' is that this test takes reasonable time to finish
-      for (int i=0; i<100000; i++) {
+      for (int i = 0; i < 100000; i++) {
         expect(pm == pm.assoc('hello${i}', 'different'), isFalse);
       }
     });
 
-    test('transient basics', (){
+    test('transient basics', () {
       TMap m = new TMap();
       m.doAssoc('a', 'b');
       m.doAssoc('c', 'd');
-      expect(m.toMap(), equals({'a':'b', 'c':'d'}));
+      expect(m.toMap(), equals({'a': 'b', 'c': 'd'}));
       m.doAssoc('a', 'bb');
-      expect(m.toMap(), equals({'a':'bb', 'c':'d'}));
+      expect(m.toMap(), equals({'a': 'bb', 'c': 'd'}));
       m.doUpdate('a', (v) => "b${v}");
-      expect(m.toMap(), equals({'a':'bbb', 'c':'d'}));
+      expect(m.toMap(), equals({'a': 'bbb', 'c': 'd'}));
       m.doDelete('a');
-      expect(m.toMap(), equals({'c':'d'}));
+      expect(m.toMap(), equals({'c': 'd'}));
     });
 
-    test('equality on hash colision', (){
+    test('equality on hash colision', () {
       var e1 = new Element(0, 0);
       var e2 = new Element(1, 0);
       var m1 = persist({e1: 0, e2: 0});
@@ -96,25 +96,25 @@ run() {
       expect(m1, equals(m2));
     });
 
-    test('union', (){
+    test('union', () {
       var dm1 = {};
       var dm2 = {};
-      for(int i = 1; i <= 1000; i++){
-        if(i%4 != 3) dm1[i] = i;
-        if(i%4 != 1) dm2[i] = -i;
+      for (int i = 1; i <= 1000; i++) {
+        if (i % 4 != 3) dm1[i] = i;
+        if (i % 4 != 1) dm2[i] = -i;
       }
       PMap m1 = persist(dm1);
       PMap m2 = persist(dm2);
       PMap m3 = m1.union(m2);
-      PMap m4 = m1.union(m2, (a,b)=>a+b);
+      PMap m4 = m1.union(m2, (a, b) => a + b);
 
       expect(m3.length, equals(1000));
       expect(m4.length, equals(1000));
-      for(int i = 1; i <= 1000; i++){
-        if(i%4 == 1){
+      for (int i = 1; i <= 1000; i++) {
+        if (i % 4 == 1) {
           expect(m3[i], equals(i));
           expect(m4[i], equals(i));
-        } else if(i%4 == 3){
+        } else if (i % 4 == 3) {
           expect(m3[i], equals(-i));
           expect(m4[i], equals(-i));
         } else {
@@ -124,26 +124,24 @@ run() {
       }
     });
 
-    test('intersection', (){
+    test('intersection', () {
       var dm1 = {};
       var dm2 = {};
-      for(int i = 1; i <= 1000; i++){
-        if(i%4 != 3) dm1[i] = i;
-        if(i%4 != 1) dm2[i] = -i;
+      for (int i = 1; i <= 1000; i++) {
+        if (i % 4 != 3) dm1[i] = i;
+        if (i % 4 != 1) dm2[i] = -i;
       }
       PMap m1 = persist(dm1);
       PMap m2 = persist(dm2);
       PMap m3 = m1.intersection(m2);
-      PMap m4 = m1.intersection(m2, (a,b)=>a+b);
+      PMap m4 = m1.intersection(m2, (a, b) => a + b);
 
       expect(m3.length, equals(500));
       expect(m4.length, equals(500));
-      for(int i = 2; i <= 1000; i+=2){
+      for (int i = 2; i <= 1000; i += 2) {
         expect(m3[i], equals(-i));
         expect(m4[i], equals(0));
       }
     });
-
   });
-
 }

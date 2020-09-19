@@ -73,8 +73,8 @@ PersistentCollection conj(PersistentCollection coll, arg0,
 PersistentCollection into(PersistentCollection coll, Iterable iter) {
   return _dispatch(coll,
       op: 'into',
-      map: () => (coll as PMap).withTransient((t) =>
-          iter.forEach((arg) => t.doAssoc(_firstP(arg), _secondP(arg)))),
+      map: () => (coll as PMap).withTransient(
+          (t) => iter.forEach((arg) => t.doAssoc(_firstP(arg), _secondP(arg)))),
       vec: () => (coll as PVec)
           .withTransient((t) => iter.forEach((arg) => t.doPush(arg))),
       set: () => (coll as PSet)

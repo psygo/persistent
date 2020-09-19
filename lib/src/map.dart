@@ -21,7 +21,6 @@ part of persistent;
  * `new PersistentMap.fromMap({k1: v1, k2: v2, ...})`.
  */
 abstract class ReadMap<K, V> implements Iterable<Pair<K, V>> {
-
   /**
    * Returns the value bound to [key].
    *
@@ -75,8 +74,8 @@ abstract class ReadMap<K, V> implements Iterable<Pair<K, V>> {
  * `new PersistentMap.fromMap({k1: v1, k2: v2, ...})`.
  */
 
-abstract class PMap<K, V> implements ReadMap<K, V>, PersistentIndexedCollection {
-
+abstract class PMap<K, V>
+    implements ReadMap<K, V>, PersistentIndexedCollection {
   /** Creates an empty [PMap] using its default implementation. */
   factory PMap() => new _Leaf.empty(null);
 
@@ -97,7 +96,8 @@ abstract class PMap<K, V> implements ReadMap<K, V>, PersistentIndexedCollection 
         }
       }
     }
-    throw new Exception('cannot construct PMap from ${source.runtimeType} ($source)');
+    throw new Exception(
+        'cannot construct PMap from ${source.runtimeType} ($source)');
   }
 
   /**
@@ -110,7 +110,8 @@ abstract class PMap<K, V> implements ReadMap<K, V>, PersistentIndexedCollection 
    * Creates a [PMap] from an [Iterable] of [Pair]s using the default
    * implementation of [PMap].
    */
-  factory PMap.fromPairs(Iterable<Pair<K, V>> pairs) => new _Node.fromPairs(pairs);
+  factory PMap.fromPairs(Iterable<Pair<K, V>> pairs) =>
+      new _Node.fromPairs(pairs);
 
   /**
    * The equality operator.
@@ -121,7 +122,7 @@ abstract class PMap<K, V> implements ReadMap<K, V>, PersistentIndexedCollection 
    * Two sets of keys are equal if and only if for each key exists
    * an equal key in the other set.
    */
-  bool operator== (other);
+  bool operator ==(other);
 
   /*
    * The documentation is inherited from the Object
@@ -219,8 +220,7 @@ abstract class PMap<K, V> implements ReadMap<K, V>, PersistentIndexedCollection 
    * Note that [union] is commutative if and only if [combine] is provided and
    * if it is commutative.
    */
-  PMap<K, V>
-      union(PMap<K, V> other, [V combine(V left, V right)]);
+  PMap<K, V> union(PMap<K, V> other, [V combine(V left, V right)]);
 
   /**
    * Returns a new map whose (key, value) pairs are the intersection of those of
@@ -239,8 +239,7 @@ abstract class PMap<K, V> implements ReadMap<K, V>, PersistentIndexedCollection 
    * Note that [intersection] is commutative if and only if [combine] is
    * provided and if it is commutative.
    */
-  PMap<K, V>
-      intersection(PMap<K, V> other, [V combine(V left, V right)]);
+  PMap<K, V> intersection(PMap<K, V> other, [V combine(V left, V right)]);
 
   /// A strict (non-lazy) version of [map].
   PMap strictMap(Pair f(Pair<K, V> pair));
@@ -249,7 +248,6 @@ abstract class PMap<K, V> implements ReadMap<K, V>, PersistentIndexedCollection 
   PMap<K, V> strictWhere(bool f(Pair<K, V> pair));
 
   PMap<K, V> update(K key, dynamic updateF);
-
 }
 
 /**
@@ -262,7 +260,6 @@ abstract class PMap<K, V> implements ReadMap<K, V>, PersistentIndexedCollection 
  * structure. The less changes are done, the more efficient is the conversion.
  */
 abstract class TMap<K, V> implements ReadMap<K, V> {
-
   /**
    * Creates an empty map using the default implementation of
    * [TMap].
@@ -279,8 +276,7 @@ abstract class TMap<K, V> implements ReadMap<K, V> {
    *     map.doAssoc('b', 2); // map is now {'a': 1, 'b': 2}
    *     map.doAssoc('b', 3); // map is now {'a': 1, 'b': 3}
    */
-  TMap<K, V>
-      doAssoc(K key, V value);
+  TMap<K, V> doAssoc(K key, V value);
 
   /**
    * Unbinds [key].
@@ -293,7 +289,7 @@ abstract class TMap<K, V> implements ReadMap<K, V> {
    *     map.doDelete('b', 2); // map is now {'a': 1}
    *     map.doDelete('b', 2, missingOk: true); // map is still {'a': 1}
    */
-  TMap<K, V> doDelete(K key, {bool missingOk: false}) ;
+  TMap<K, V> doDelete(K key, {bool missingOk: false});
 
   /**
    * Adjusts the value that is possibly bound to [key] by applying [f].

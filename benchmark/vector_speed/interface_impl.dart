@@ -6,13 +6,10 @@
 
 part of vector_speed;
 
-class PersistentVectorInterface<E>
-  extends EncapsulatingInterface<E, PVec<E>>{
-
+class PersistentVectorInterface<E> extends EncapsulatingInterface<E, PVec<E>> {
   create() => object = new PVec<E>();
 
-  push(E value) =>
-    object = object.push(value);
+  push(E value) => object = object.push(value);
 
   get(int index) => object.get(index);
 
@@ -23,14 +20,10 @@ class PersistentVectorInterface<E>
   _copy() => object;
 }
 
-
-class TransientVectorInterface<E>
-  extends EncapsulatingInterface<E, TVec<E>>{
-
+class TransientVectorInterface<E> extends EncapsulatingInterface<E, TVec<E>> {
   create() => object = new PVec<E>().asTransient();
 
-  push(E value) =>
-    object.doPush(value);
+  push(E value) => object.doPush(value);
 
   get(int index) => object.get(index);
 
@@ -38,34 +31,23 @@ class TransientVectorInterface<E>
 
   pop() => object.doPop();
 
-  _copy(){
+  _copy() {
     return new PVec.from(object).asTransient();
   }
 }
 
-
-class ListInterface<E>
-  extends EncapsulatingInterface<E, List<E>>{
-
+class ListInterface<E> extends EncapsulatingInterface<E, List<E>> {
   create() => object = [];
 
-  push(E value) =>
-    object.add(value);
+  push(E value) => object.add(value);
 
   get(int index) => object[index];
 
-  set(int index, E value) => object[index] =  value;
+  set(int index, E value) => object[index] = value;
 
   pop() => object.removeLast();
 
-  _copy(){
+  _copy() {
     return new List.from(object);
   }
 }
-
-
-
-
-
-
-

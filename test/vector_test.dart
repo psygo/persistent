@@ -14,9 +14,7 @@ main() {
 }
 
 run() {
-
   group('PersistentVector', () {
-
     PV(list) => new PVec.from(list);
 
     test('get', () {
@@ -78,11 +76,12 @@ run() {
     });
 
     test('withTransient', () {
-      expect(PV([0, 1]).withTransient((v){
-         v[0]=2;
-      }).toList(), equals([2, 1]));
+      expect(
+          PV([0, 1]).withTransient((v) {
+            v[0] = 2;
+          }).toList(),
+          equals([2, 1]));
     });
-
 
     test('pushing nulls', () {
       PVec v = PV([]);
@@ -99,9 +98,7 @@ run() {
     });
   });
 
-
   group('TransientVector', () {
-
     TV(list) => new PVec.from(list).asTransient();
 
     test('get', () {
@@ -142,13 +139,31 @@ run() {
     });
 
     test('push', () {
-      expect(TV([0])..doPush(1)..toList(), equals([0, 1]));
-      expect(TV([])..doPush(0)..doPush(1)..toList(), equals([0, 1]));
+      expect(
+          TV([0])
+            ..doPush(1)
+            ..toList(),
+          equals([0, 1]));
+      expect(
+          TV([])
+            ..doPush(0)
+            ..doPush(1)
+            ..toList(),
+          equals([0, 1]));
     });
 
     test('pop', () {
-      expect(TV([0, 1])..doPop()..toList(), equals([0]));
-      expect(TV([0, 1])..doPop()..doPop()..toList(), equals([]));
+      expect(
+          TV([0, 1])
+            ..doPop()
+            ..toList(),
+          equals([0]));
+      expect(
+          TV([0, 1])
+            ..doPop()
+            ..doPop()
+            ..toList(),
+          equals([]));
       expect(() => TV([0, 1])..doPop()..doPop()..doPop(), throws);
     });
 
@@ -156,7 +171,11 @@ run() {
       TVec v = TV([0, 1]);
       v[0] = 1;
       expect(v, equals([1, 1]));
-      expect(TV([0, 1])..doSet(0, 1)..toList(), equals([1, 1]));
+      expect(
+          TV([0, 1])
+            ..doSet(0, 1)
+            ..toList(),
+          equals([1, 1]));
       expect(() => TV([0, 1])..doSet(2, 1), throws);
       expect(() => TV([0, 1])[2] = 1, throws);
     });
@@ -165,7 +184,5 @@ run() {
       expect(TV([0, 1]).asPersistent().toList(), equals([0, 1]));
       expect(TV([0, 1]).asPersistent() is PVec, isTrue);
     });
-
-
   });
 }

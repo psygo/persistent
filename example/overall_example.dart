@@ -8,28 +8,33 @@ library overall_example;
 
 import 'package:vacuum_persistent/persistent.dart';
 
-example(){
+example() {
   var couple = new PMap.fromMap({'father': 'Homer', 'mother': 'Marge'});
   var withChild = couple.assoc('boy', 'Bart');
   print(couple); // {mother: Marge, father: Homer}
   print(withChild); // {boy: Bart, mother: Marge, father: Homer}
 }
 
-example2(){
+example2() {
   // deeply persist the structure of Maps and Lists
-  var a = per({[1,2]: 'tower', [1,3]: 'water'});
-  var b = per({[1,2]: 'tower', [1,3]: 'water'});
-  assert(a==b);
+  var a = per({
+    [1, 2]: 'tower',
+    [1, 3]: 'water'
+  });
+  var b = per({
+    [1, 2]: 'tower',
+    [1, 3]: 'water'
+  });
+  assert(a == b);
   // kids, don't try this with standard List, it ain't work
   print(a[per([1, 2])]); // prints hello
 }
 
 main() {
-
   // Persistency:
 
-  final map1 = new PMap.fromMap({"a":1, "b":2});
-  final map2 = new PMap.fromMap({"b":3, "c":4});
+  final map1 = new PMap.fromMap({"a": 1, "b": 2});
+  final map2 = new PMap.fromMap({"b": 3, "c": 4});
 
   print(map1["a"]); // 1
   print(map1.get("b")); // 2
@@ -38,7 +43,7 @@ main() {
   print(map1.assoc("c", 3)); // {a: 1, b: 2, c: 3}
   print(map1.assoc("d", 4)); // {a: 1, b: 2, d: 4}
 
-  final map3 = map2._update("c", (x) => x+3);
+  final map3 = map2._update("c", (x) => x + 3);
   print(map3.delete("b")); // {c: 7}
   print(map3.delete("a", missingOk: true)); // {b: 3, c: 7}
 
@@ -59,7 +64,7 @@ main() {
   temp[1] = "Y";
   final vector2 = temp.asPersistent();
 
-  final vector3 = vector2.withTransient((TransientVector v){
+  final vector3 = vector2.withTransient((TransientVector v) {
     v.doSet(2, "Z");
     v.doPop();
     v[0] = "X";
@@ -77,5 +82,4 @@ main() {
   final set2 = new PersistentSet.from([1, 2, 3]);
   print((set1 * set2).toList());
   // [Pair(a, 1), Pair(a, 2), Pair(a, 3), Pair(b, 1), Pair(b, 2), Pair(b, 3)]
-
 }

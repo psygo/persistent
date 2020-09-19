@@ -15,40 +15,35 @@ Map template = {};
 List data = [];
 
 var creators = {
-
   "persistent": () => new PMap.fromMap(template),
-
-  "transient": (){
+  "transient": () {
     var res = new TMap();
     template.forEach((k, v) => res.doAssoc(k, v));
     return res;
   },
-
   "map": () => new Map.from(template),
   "hashmap": () => new HashMap.from(template)
 };
 
 void run(int template_size, String mode) {
-
   for (int i = 0; i < template_size; i++) {
     template["$i".padLeft(8)] = "$i".padRight(8);
   }
 
   int allocated = 0;
-  for(bool go = true; go; allocated++){
-    try{
+  for (bool go = true; go; allocated++) {
+    try {
       go = false;
       var a = creators[mode]();
       data.add(a);
       go = true;
       print(1073741824.0 / allocated / template_size);
-    } catch(e) {
+    } catch (e) {
       data = null;
     }
   }
 }
 
-main(List<String> args){
-
+main(List<String> args) {
   run(int.parse(args[0]), args[1]);
 }

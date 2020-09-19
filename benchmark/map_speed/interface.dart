@@ -6,8 +6,7 @@
 
 part of map_bench;
 
-abstract class BenchmarkInterface<K, V>{
-
+abstract class BenchmarkInterface<K, V> {
   void assoc(K key, V value);
   void get(K key);
   void delete(K key);
@@ -16,20 +15,18 @@ abstract class BenchmarkInterface<K, V>{
   void restore();
 }
 
-
 abstract class EncapsulatingInterface<K, V, T>
-  extends BenchmarkInterface<K, V>{
-
+    extends BenchmarkInterface<K, V> {
   T object = null;
   T object_copy = null;
 
   T _copy();
 
-  save(){
+  save() {
     object_copy = _copy();
   }
 
-  restore(){
+  restore() {
     return object = object_copy;
   }
 }

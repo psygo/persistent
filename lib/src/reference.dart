@@ -13,12 +13,14 @@ class Reference<V> {
   Reference([defVal = null]) : _value = defVal;
 
   Stream get onChange {
-    if (_onChangeController == null) _onChangeController = new StreamController.broadcast(sync: false);
+    if (_onChangeController == null)
+      _onChangeController = new StreamController.broadcast(sync: false);
     return _onChangeController.stream;
   }
 
   Stream get onChangeSync {
-    if (_onChangeSyncController == null) _onChangeSyncController = new StreamController.broadcast(sync: true);
+    if (_onChangeSyncController == null)
+      _onChangeSyncController = new StreamController.broadcast(sync: true);
     return _onChangeSyncController.stream;
   }
 
@@ -28,12 +30,11 @@ class Reference<V> {
    */
   update(f) => _setValue(f(deref()));
 
-
   _setValue(val) {
-     var change = per({'oldVal': _value, 'newVal': val});
-     _value = val;
-     if (_onChangeSyncController != null) _onChangeSyncController.add(change);
-     if (_onChangeController != null) _onChangeController.add(change);
+    var change = per({'oldVal': _value, 'newVal': val});
+    _value = val;
+    if (_onChangeSyncController != null) _onChangeSyncController.add(change);
+    if (_onChangeController != null) _onChangeController.add(change);
   }
 
   Cursor get cursor => new Cursor(this, []);

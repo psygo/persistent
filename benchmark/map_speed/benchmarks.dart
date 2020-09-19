@@ -6,67 +6,62 @@
 
 part of map_bench;
 
-class WriteBenchmark extends BenchmarkBase{
-
+class WriteBenchmark extends BenchmarkBase {
   final Map<num, num> sample;
   BenchmarkInterface object;
   final dynamic factory;
 
-  void setup(){
+  void setup() {
     object = factory();
   }
 
-  WriteBenchmark(this.sample, this.factory):super('Writing');
+  WriteBenchmark(this.sample, this.factory) : super('Writing');
 
-  void run(){
+  void run() {
     for (var size in this.sample.keys) {
-      for (var j=0; j<this.sample[size]; j++){
+      for (var j = 0; j < this.sample[size]; j++) {
         object = factory();
-        for (var val in ["foo", "bar", "baz", "woo", "hoo", "goo", "wat"]){
+        for (var val in ["foo", "bar", "baz", "woo", "hoo", "goo", "wat"]) {
           for (int i = 0; i < size; i++) {
-            object.assoc(i*i, val);
+            object.assoc(i * i, val);
           }
         }
         for (int i = 0; i < size; i++) {
-          object.delete(i*i);
+          object.delete(i * i);
         }
       }
     }
   }
 }
 
-
-class ReadBenchmark extends BenchmarkBase{
-
+class ReadBenchmark extends BenchmarkBase {
   final Map<num, num> sample;
   Map<num, List<BenchmarkInterface>> objects = new Map();
   final dynamic factory;
 
-  ReadBenchmark(this.sample, this.factory):super('Reading');
+  ReadBenchmark(this.sample, this.factory) : super('Reading');
 
-  void setup(){
-    this.sample.forEach((size, count){
+  void setup() {
+    this.sample.forEach((size, count) {
       objects[size] = [];
-      for (int j=0; j<count; j++){
+      for (int j = 0; j < count; j++) {
         BenchmarkInterface object = factory();
         objects[size].add(object);
         for (int i = 0; i < size; i++) {
-          object.assoc(i*i, "foo");
+          object.assoc(i * i, "foo");
         }
       }
     });
   }
 
-  void run(){
+  void run() {
     for (var size in this.sample.keys) {
-      for (var j=0; j<this.sample[size]; j++){
+      for (var j = 0; j < this.sample[size]; j++) {
         BenchmarkInterface object = objects[size][j];
         for (int i = size; i >= 0; i--) {
-          object.get(i*i);
+          object.get(i * i);
         }
       }
     }
   }
 }
-
-
